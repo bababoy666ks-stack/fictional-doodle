@@ -1,0 +1,762 @@
+local Players = game:GetService("Players")
+local SoundService = game:GetService("SoundService")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local playerGui = player.PlayerGui
+
+local clickSound = Instance.new("Sound")
+clickSound.SoundId = "rbxassetid://162426626"
+clickSound.Volume = 0.5
+clickSound.Parent = SoundService
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "ModeScriptIntegration"
+gui.Parent = playerGui
+
+local mainWindow = Instance.new("Frame")
+mainWindow.Size = UDim2.new(0, 500, 0, 320)
+mainWindow.Position = UDim2.new(0.5, -250, 0.5, -160)
+mainWindow.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+mainWindow.BorderSizePixel = 1
+mainWindow.BorderColor3 = Color3.new(0.3, 0.3, 0.3)
+mainWindow.Visible = true
+mainWindow.Parent = gui
+
+local timeLabel = Instance.new("TextLabel")
+timeLabel.Size = UDim2.new(0, 120, 0, 20)
+timeLabel.Position = UDim2.new(1, -125, 0, 4)
+timeLabel.BackgroundTransparency = 1
+timeLabel.TextColor3 = Color3.new(1, 1, 1)
+timeLabel.TextSize = 12
+timeLabel.Font = Enum.Font.SourceSans
+timeLabel.Parent = mainWindow
+
+local function updateTime()
+    local currentTime = os.date("%H:%M:%S")
+    timeLabel.Text = currentTime
+end
+updateTime()
+RunService.RenderStepped:Connect(updateTime)
+
+local titleBar = Instance.new("Frame")
+titleBar.Size = UDim2.new(1, 0, 0, 28)
+titleBar.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+titleBar.Parent = mainWindow
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -130, 1, 0)
+titleLabel.Position = UDim2.new(0, 5, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "脚本整合V3 (硬核猫制作)"
+titleLabel.TextColor3 = Color3.new(1, 1, 1)
+titleLabel.TextSize = 15
+titleLabel.Font = Enum.Font.SourceSansBold
+titleLabel.Parent = titleBar
+
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 26, 0, 26)
+closeBtn.Position = UDim2.new(1, -26, 0, 1)
+closeBtn.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+closeBtn.Text = "×"
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.TextSize = 16
+closeBtn.Parent = titleBar
+closeBtn.MouseButton1Click:Connect(function()
+    clickSound:Play()
+    gui:Destroy()
+end)
+
+local navFrame = Instance.new("Frame")
+navFrame.Size = UDim2.new(0, 130, 0, 292)
+navFrame.Position = UDim2.new(0, 0, 0, 28)
+navFrame.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+navFrame.Parent = mainWindow
+
+local announcementBtn = Instance.new("TextButton")
+announcementBtn.Size = UDim2.new(1, 0, 0, 35)
+announcementBtn.Position = UDim2.new(0, 0, 0, 8)
+announcementBtn.BackgroundColor3 = Color3.new(0.25, 0.25, 0.25)
+announcementBtn.Text = "公告"
+announcementBtn.TextColor3 = Color3.new(1, 1, 1)
+announcementBtn.TextSize = 13
+announcementBtn.Parent = navFrame
+
+local modeListBtn = Instance.new("TextButton")
+modeListBtn.Size = UDim2.new(1, 0, 0, 35)
+modeListBtn.Position = UDim2.new(0, 0, 0, 50)
+modeListBtn.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+modeListBtn.Text = "模式列表"
+modeListBtn.TextColor3 = Color3.new(1, 1, 1)
+modeListBtn.TextSize = 13
+modeListBtn.Parent = navFrame
+
+local doorScriptBtn = Instance.new("TextButton")
+doorScriptBtn.Size = UDim2.new(1, 0, 0, 35)
+doorScriptBtn.Position = UDim2.new(0, 0, 0, 92)
+doorScriptBtn.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+doorScriptBtn.Text = "门脚本"
+doorScriptBtn.TextColor3 = Color3.new(1, 1, 1)
+doorScriptBtn.TextSize = 13
+doorScriptBtn.Parent = navFrame
+
+local contentFrame = Instance.new("Frame")
+contentFrame.Size = UDim2.new(0, 360, 0, 292)
+contentFrame.Position = UDim2.new(0, 135, 0, 28)
+contentFrame.BackgroundTransparency = 0
+contentFrame.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
+contentFrame.Parent = mainWindow
+
+local announcementPanel = Instance.new("TextLabel")
+announcementPanel.Size = UDim2.new(1, -15, 1, -15)
+announcementPanel.Position = UDim2.new(0, 7, 0, 7)
+announcementPanel.BackgroundTransparency = 1
+announcementPanel.Text = "脚本公告：\n1. 新增格雷斯模式和硬核伪重制\n2. 部分模式可运行，禁止倒卖\n3. 如有问题联系作者"
+announcementPanel.TextColor3 = Color3.new(1, 1, 1)
+announcementPanel.TextSize = 14
+announcementPanel.TextWrapped = true
+announcementPanel.Parent = contentFrame
+
+local modePanel = Instance.new("Frame")
+modePanel.Size = UDim2.new(1, 0, 1, 0)
+modePanel.BackgroundTransparency = 1
+modePanel.Visible = false
+modePanel.Parent = contentFrame
+
+local scrollContainer = Instance.new("Frame")
+scrollContainer.Size = UDim2.new(1, -20, 1, 0)
+scrollContainer.Position = UDim2.new(0, 5, 0, 0)
+scrollContainer.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+scrollContainer.ClipsDescendants = true
+scrollContainer.Parent = modePanel
+
+local modeContent = Instance.new("Frame")
+modeContent.Size = UDim2.new(1, 0, 0, 328)
+modeContent.Position = UDim2.new(0, 0, 0, 0)
+modeContent.BackgroundTransparency = 1
+modeContent.Parent = scrollContainer
+
+local modes = {
+    {name = "硬核模式 V4", y = 0},
+    {name = "硬核模式 V5", y = 38},
+    {name = "格蕾斯模式", y = 76},
+    {name = "碎片模式", y = 114},
+    {name = "极端模式", y = 152},
+    {name = "疯狂模式", y = 190},
+    {name = "混乱模式", y = 228},
+    {name = "硬核伪重置", y = 266}
+}
+
+for _, mode in ipairs(modes) do
+    local modeFrame = Instance.new("Frame")
+    modeFrame.Size = UDim2.new(1, -10, 0, 35)
+    modeFrame.Position = UDim2.new(0, 5, 0, mode.y)
+    modeFrame.BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)
+    modeFrame.Parent = modeContent
+
+    local modeName = Instance.new("TextLabel")
+    modeName.Size = UDim2.new(0.7, 0, 1, 0)
+    modeName.Position = UDim2.new(0.05, 0, 0, 0)
+    modeName.BackgroundTransparency = 1
+    modeName.Text = mode.name
+    modeName.TextColor3 = Color3.new(1, 1, 1)
+    modeName.TextSize = 14
+    modeName.Parent = modeFrame
+
+    local runBtn = Instance.new("TextButton")
+    runBtn.Size = UDim2.new(0, 50, 0, 22)
+    runBtn.Position = UDim2.new(0.85, -50, 0.5, -11)
+    runBtn.BackgroundColor3 = if mode.name == "极端模式" or mode.name == "疯狂模式" or mode.name == "混乱模式" then Color3.new(0.5, 0.5, 0.5) else Color3.new(0.2, 0.5, 0.2)
+    runBtn.Text = if mode.name == "极端模式" or mode.name == "疯狂模式" or mode.name == "混乱模式" then "没有" else "运行"
+    runBtn.TextColor3 = Color3.new(1, 1, 1)
+    runBtn.TextSize = 12
+    runBtn.Parent = modeFrame
+
+    runBtn.MouseButton1Click:Connect(function()
+        clickSound:Play()
+        if mode.name == "硬核模式 V4" then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/localplayerr/Doors-stuff/refs/heads/main/Hardcore%20v4%20recreate/main%20code"))()
+        elseif mode.name == "硬核模式 V5" then
+            loadstring(game:HttpGet("https://gist.githubusercontent.com/Maxey1950/5f324f436b832e7aa8b1c4625dfa6106/raw/eb42e40d80fdf9228a93504886de882aba68fb00/gistfile1.txt",true))()
+        elseif mode.name == "格蕾斯模式" then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/IdkMyNameLoll/PublicScripts/refs/heads/main/DoorsXGrace.lua"))()
+        elseif mode.name == "碎片模式" then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/RBXDM/SCRMODE/refs/heads/main/Fragmented"))()
+        elseif mode.name == "极端模式" then
+        elseif mode.name == "疯狂模式" then
+        elseif mode.name == "混乱模式" then
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/munciseek/Scriptmode/mode/Troll'))()
+        elseif mode.name == "硬核伪重置" then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/daiayday/HardcoreRemastered/refs/heads/main/obf_L6zO2N0sG5ehDHd56JBc5z70TZ2piVOvIqsgE88741HXGrwv7E4qd6c8axu8z4oh.lua.txt"))()
+        end
+        print("正在运行 " .. mode.name .. " 脚本中...")
+    end)
+end
+
+local scrollThumb = Instance.new("Frame")
+scrollThumb.Size = UDim2.new(0, 8, 0, 40)
+scrollThumb.Position = UDim2.new(1, -15, 0, 10)
+scrollThumb.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+scrollThumb.BorderSizePixel = 1
+scrollThumb.BorderColor3 = Color3.new(0.7, 0.7, 0.7)
+scrollThumb.Parent = modePanel
+
+local isDragging = false
+local startTouchY = 0
+local startScrollRatio = 0
+scrollThumb.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        isDragging = true
+        startTouchY = input.Position.Y
+        local containerHeight = scrollContainer.AbsoluteSize.Y
+        local contentHeight = modeContent.AbsoluteSize.Y
+        local maxOffset = math.max(0, contentHeight - containerHeight)
+        startScrollRatio = (-modeContent.Position.Y.Offset) / maxOffset
+        startScrollRatio = math.clamp(startScrollRatio, 0, 1)
+        
+        local connection
+        connection = input:GetPropertyChangedSignal("Position"):Connect(function()
+            if not isDragging then
+                connection:Disconnect()
+                return
+            end
+            local deltaY = input.Position.Y - startTouchY
+            local containerHeight = scrollContainer.AbsoluteSize.Y
+            local contentHeight = modeContent.AbsoluteSize.Y
+            local maxOffset = math.max(0, contentHeight - containerHeight)
+            if maxOffset <= 0 then
+                connection:Disconnect()
+                return
+            end
+            
+            local newScrollRatio = startScrollRatio + (deltaY / containerHeight)
+            newScrollRatio = math.clamp(newScrollRatio, 0, 1)
+            local newContentY = -newScrollRatio * maxOffset
+            modeContent.Position = UDim2.new(0, 0, 0, newContentY)
+            scrollThumb.Position = UDim2.new(1, -15, 0, newScrollRatio * (containerHeight - scrollThumb.AbsoluteSize.Y) + 10)
+        end)
+    end
+end)
+
+game:GetService("UserInputService").InputEnded:Connect(function(input)
+    if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and isDragging then
+        isDragging = false
+    end
+end)
+
+local function initScrollThumbPos()
+    local containerHeight = scrollContainer.AbsoluteSize.Y
+    local contentHeight = modeContent.AbsoluteSize.Y
+    local maxOffset = math.max(0, contentHeight - containerHeight)
+    scrollThumb.Visible = maxOffset > 0
+    if maxOffset > 0 then
+        scrollThumb.Position = UDim2.new(1, -15, 0, 10)
+    end
+end
+initScrollThumbPos()
+
+local doorScriptPanel = Instance.new("Frame")
+doorScriptPanel.Size = UDim2.new(1, 0, 1, 0)
+doorScriptPanel.BackgroundTransparency = 1
+doorScriptPanel.Visible = false
+doorScriptPanel.Parent = contentFrame
+
+local doorScriptItems = {
+    {name = "XA HUB", y = 30},
+    {name = "MsDoors", y = 80},
+    {name = "体力条 V2", y = 130},
+    {name = "体力条 V4", y = 180},
+    {name = "十字架（仅封印格蕾丝和不可能）", y = 230}
+}
+
+for _, item in ipairs(doorScriptItems) do
+    local itemFrame = Instance.new("Frame")
+    itemFrame.Size = UDim2.new(1, -10, 0, 35)
+    itemFrame.Position = UDim2.new(0, 5, 0, item.y)
+    itemFrame.BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)
+    itemFrame.Parent = doorScriptPanel
+
+    local itemName = Instance.new("TextLabel")
+    itemName.Size = UDim2.new(0.7, 0, 1, 0)
+    itemName.Position = UDim2.new(0.05, 0, 0, 0)
+    itemName.BackgroundTransparency = 1
+    itemName.Text = item.name
+    itemName.TextColor3 = Color3.new(1, 1, 1)
+    itemName.TextSize = 14
+    itemName.Parent = itemFrame
+
+    local runBtn = Instance.new("TextButton")
+    runBtn.Size = UDim2.new(0, 50, 0, 22)
+    runBtn.Position = UDim2.new(0.85, -50, 0.5, -11)
+    runBtn.BackgroundColor3 = Color3.new(0.2, 0.5, 0.2)
+    runBtn.Text = "运行"
+    runBtn.TextColor3 = Color3.new(1, 1, 1)
+    runBtn.TextSize = 12
+    runBtn.Parent = itemFrame
+
+    runBtn.MouseButton1Click:Connect(function()
+        clickSound:Play()
+        if item.name == "XA HUB" then
+            loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\112\97\115\116\101\98\105\110\46\99\111\109\47\114\97\119\47\54\53\84\119\84\56\106\97"))()
+        elseif item.name == "MsDoors" then
+            loadstring(game:HttpGet("https://rawscripts.net/raw/DOORS-MsDoors-58188"))()
+        elseif item.name == "体力条 V2" then
+            local Players = game:GetService("Players")
+            local RunService = game:GetService("RunService")
+            local TweenService = game:GetService("TweenService")
+
+            local player = Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoid = character:WaitForChild("Humanoid")
+
+            local WALK_SPEED = 15
+            local RUN_SPEED = 26
+            local STAMINA_MAX = 100
+            local STAMINA_DECREASE_RATE = 12
+            local STAMINA_INCREASE_RATE = 8
+            local isSprinting = false
+            local currentStamina = STAMINA_MAX
+            local isLocked = false
+
+            local function createSprintUI()
+                local gui = Instance.new("ScreenGui")
+                gui.Name = "SprintUI"
+                gui.Parent = player.PlayerGui
+
+                local sprintButton = Instance.new("TextButton")
+                sprintButton.Size = UDim2.new(0.15, 0, 0.07, 0)
+                sprintButton.Position = UDim2.new(0.8, 0, 0.85, 0)
+                sprintButton.BackgroundColor3 = Color3.new(0.8, 0.6, 0.2)
+                sprintButton.BorderSizePixel = 1
+                sprintButton.Text = "Sprint"
+                sprintButton.TextColor3 = Color3.new(0, 0, 0)
+                sprintButton.TextSize = 20
+                sprintButton.Font = Enum.Font.SourceSansBold
+                sprintButton.Parent = gui
+
+                local staminaBarBg = Instance.new("Frame")
+                staminaBarBg.Size = UDim2.new(0.3, 0, 0.02, 0)
+                staminaBarBg.Position = UDim2.new(0.65, 0, 0.82, 0)
+                staminaBarBg.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+                staminaBarBg.Parent = gui
+
+                local staminaBar = Instance.new("Frame")
+                staminaBar.Size = UDim2.new(1, 0, 1, 0)
+                staminaBar.BackgroundColor3 = Color3.new(0.9, 0.8, 0.6)
+                staminaBar.Parent = staminaBarBg
+
+                sprintButton.Activated:Connect(function()
+                    if isLocked then
+                        return
+                    end
+                    if currentStamina == 0 then
+                        sprintButton.Text = "No Stamina"
+                        wait(0.5)
+                        sprintButton.Text = "Sprint"
+                    elseif currentStamina == STAMINA_MAX then
+                        isSprinting = true
+                        humanoid.WalkSpeed = RUN_SPEED
+                        sprintButton.Text = "Running"
+                    else
+                        isSprinting = not isSprinting
+                        if isSprinting then
+                            humanoid.WalkSpeed = RUN_SPEED
+                            sprintButton.Text = "Running"
+                            sprintButton.BackgroundColor3 = Color3.new(0.8, 0.6, 0.2)
+                        else
+                            humanoid.WalkSpeed = WALK_SPEED
+                            sprintButton.Text = "Recover"
+                            sprintButton.BackgroundColor3 = Color3.new(0.3, 0.8, 0.4)
+                        end
+                    end
+                end)
+
+                return {
+                    UpdateStamina = function(stamina)
+                        currentStamina = stamina
+
+                        local newSize = UDim2.new(stamina / STAMINA_MAX, 0, 1, 0)
+                        TweenService:Create(staminaBar, TweenInfo.new(0.1), {Size = newSize}):Play()
+
+                        if currentStamina == 0 then
+                            isLocked = true
+                            sprintButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+                            sprintButton.Text = "Locked"
+                            staminaBar.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+                        elseif currentStamina == STAMINA_MAX then
+                            isLocked = false
+                            sprintButton.BackgroundColor3 = Color3.new(0.8, 0.6, 0.2)
+                            sprintButton.Text = "Sprint"
+                            staminaBar.BackgroundColor3 = Color3.new(0.9, 0.8, 0.6)
+                        else
+                            sprintButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+                            sprintButton.Text = "Locked"
+                            staminaBar.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+                        end
+
+                        if not isLocked and currentStamina ~= 0 and currentStamina ~= STAMINA_MAX then
+                            sprintButton.BackgroundColor3 = isSprinting and Color3.new(0.8, 0.6, 0.2) or Color3.new(0.3, 0.8, 0.4)
+                        end
+                    end
+                }
+            end
+
+            local sprintUI = createSprintUI()
+
+            player.CharacterAdded:Connect(function(newChar)
+                character = newChar
+                humanoid = character:WaitForChild("Humanoid")
+                humanoid.WalkSpeed = WALK_SPEED
+                isSprinting = false
+                currentStamina = STAMINA_MAX
+                isLocked = false
+                sprintUI.UpdateStamina(currentStamina)
+                local sprintButton = player.PlayerGui.SprintUI.TextButton
+                if sprintButton then
+                    sprintButton.Text = "Sprint"
+                end
+            end)
+
+            RunService.Heartbeat:Connect(function(deltaTime)
+                if isSprinting and not isLocked then
+                    currentStamina = math.max(0, currentStamina - STAMINA_DECREASE_RATE * deltaTime)
+                    if currentStamina <= 0 then
+                        isSprinting = false
+                        humanoid.WalkSpeed = WALK_SPEED
+                        local sprintButton = player.PlayerGui.SprintUI.TextButton
+                        if sprintButton then
+                            sprintButton.Text = "Locked"
+                        end
+                    end
+                else
+                    if currentStamina < STAMINA_MAX then
+                        currentStamina = math.min(STAMINA_MAX, currentStamina + STAMINA_INCREASE_RATE * deltaTime)
+                    end
+                end
+                sprintUI.UpdateStamina(currentStamina)
+            end)
+
+            humanoid.WalkSpeed = WALK_SPEED
+        elseif item.name == "体力条 V4" then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/bababoy666ks-stack/-/c4161fd66fcac95f75117c353a55f51a0430f660/%E5%A5%94%E8%B7%91%E4%BD%93%E5%8A%9B%E5%80%BC%E8%84%9A%E6%9C%AC%E7%B2%BE%E7%AE%80"))()
+        elseif item.name == "十字架（仅封印格蕾丝和不可能）" then
+            _G.Uses = 1
+            _G.Range = 50.5
+
+            local Uses = _G.Uses
+
+            local tweensv = game:GetService("TweenService")
+            local Player = game.Players.LocalPlayer
+            local Character = Player.Character
+            local Hum = Character.Humanoid
+
+            local LatestRoom = game:GetService("ReplicatedStorage").GameData.LatestRoom
+
+            local CameraShaker = require(game.ReplicatedStorage.CameraShaker)
+            local camara = game.Workspace.CurrentCamera
+            local camShake = CameraShaker.new(Enum.RenderPriority.Camera.Value, function(shakeCf)
+                camara.CFrame = camara.CFrame * shakeCf
+            end)
+
+            camShake:Start()
+
+            local ToolFunctions = {
+                 OnClick = function() end,
+                 OnEquip = function() end,
+                 OnUnequipped = function() end,
+            }
+
+            local MainModels = game:GetObjects("rbxassetid://12424097714")[1]
+            MainModels.Parent = game.ReplicatedStorage
+
+            local Tool_obj = MainModels.Crucifix
+            local ToolHandle = Tool_obj:WaitForChild("Handle",5)
+
+            local Portal = MainModels.Repentance
+
+            ToolHandle.Anchored = false
+
+            local Cooldown = false
+            local Equipped = false
+
+            ToolFunctions.OnClick = function()
+
+            end
+
+            ToolFunctions.OnEquip = function()
+                Equipped = true
+            end
+
+            ToolFunctions.OnUnequipped = function()
+                Equipped = false
+            end
+
+            Tool_obj.Equipped:Connect(function()
+                ToolFunctions.OnEquip()
+            end)
+
+            Tool_obj.Activated:Connect(function()
+                ToolFunctions.OnClick()
+            end)
+
+            Tool_obj.Unequipped:Connect(function()
+                ToolFunctions.OnUnequipped()
+            end)
+
+            function entity_check()
+                local closestDistance, closestObject = math.huge, nil
+                    for _, part in ipairs(workspace:GetDescendants()) do
+                        if part:IsA("Model") then
+                            local part1 = part:GetAttribute("IsCustomEntity")
+                            if part1 then
+                                local distance = game.Players.LocalPlayer:DistanceFromCharacter(part.PrimaryPart.Position)
+                                    if distance < closestDistance then
+                                    closestDistance = distance
+                                    closestObject = part
+                                end
+                            end
+                        end
+                    end
+                return closestObject, closestDistance
+            end
+
+            function hell(oldentity)
+                local entity = oldentity:Clone()
+                entity.Parent = workspace
+                entity.Name = "Fake"..oldentity.Name
+
+                oldentity:Destroy()
+
+                local primary = entity.PrimaryPart or entity:FindFirstChildOfClass("Part")
+
+                local params = RaycastParams.new()
+                params.FilterType = Enum.RaycastFilterType.Blacklist
+                params.FilterDescendantsInstances = { Character, entity }
+
+                local ray = workspace:Raycast(primary.Position, Vector3.new(0,-1,0) * 20, params)
+
+                local gate = Portal:Clone()
+                gate.Parent = workspace
+
+                local pentagram = gate.Pentagram
+
+                if ray then
+                    local part = Instance.new("Part")
+                    part.Anchored = true
+                    part.Position = ray.Position + Vector3.new(0, 1, 0)
+
+                    gate:PivotTo(part.CFrame * CFrame.new(0, -0.5, 0) * CFrame.Angles(0, 0, 0))
+
+                    part:Destroy()
+                end
+
+                local spinrate = 2
+                local crucifix_spin = Instance.new("NumberValue")
+                local spinrate_changed = Instance.new("NumberValue")
+
+                local gate_spin = game:GetService("RunService").Heartbeat:Connect(function()
+                    pentagram.RingAddonA.Orientation += Vector3.new(0, spinrate, 0)
+                    pentagram.RingAddonB.Orientation += Vector3.new(0, -spinrate, 0)
+                    pentagram.RingAddonC.Orientation += Vector3.new(0, spinrate * 0.8, 0)
+                    pentagram.Base.Orientation += Vector3.new(0, -spinrate * 0.5, 0)
+
+                    gate.Crucifix.Glow.Orientation += Vector3.new(0, crucifix_spin.Value, 0)
+                end)
+
+                spinrate_changed.Changed:Connect(function(V)
+                    spinrate = V
+                end)
+
+                for _,v in pairs(entity:GetDescendants()) do
+                    if v:IsA("BasePart") then 
+                        v.Anchored = true
+                    end
+                end
+
+                local Stored = gate.Crucifix.Glow.CFrame  
+
+                gate.Crucifix.Glow.Sound.TimePosition = 0
+                gate.Crucifix.Glow.SoundFail.TimePosition = 0
+
+                gate.Crucifix.Glow.Sound.SoundId = "rbxassetid://6555668806"
+                gate.Crucifix.Glow.SoundFail.SoundId = "rbxassetid://6555668806"
+
+                gate.Crucifix.Glow.Sound:Play()
+
+                gate.Crucifix.Glow.CFrame = ToolHandle.CFrame
+
+                local C = Player.Character
+                local NewPos = C.HumanoidRootPart.CFrame * CFrame.new(0, 3.5, -6)
+
+                spawn(function()
+                    tweensv:Create(gate.Crucifix.Glow, TweenInfo.new(1.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        CFrame = NewPos,
+                    }):Play()
+
+                    task.wait(.6)
+
+                    tweensv:Create(crucifix_spin, TweenInfo.new(4, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {
+                            Value = 50,
+                        }):Play()
+                end)
+
+                spawn(function()
+                    task.wait(1)
+
+                    tweensv:Create(gate.Crucifix.Glow.Light, TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                        Range = 15,
+                        Brightness = 3
+                    }):Play()
+                end)
+
+                tweensv:Create(pentagram.Circle, TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                    Position = pentagram.Circle.Position - Vector3.new(0, 10, 0),
+                }):Play()
+
+                camShake:ShakeOnce(10,15,4,5)
+
+                tweensv:Create(spinrate_changed, TweenInfo.new(6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        Value = 5,
+                    }):Play()
+
+                local function move(part)
+                    tweensv:Create(gate.Entity, TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                        Position = gate.Entity.Position + Vector3.new(0,5,0),
+                    }):Play()
+
+                    tweensv:Create(part, TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                        Position = part.Position + Vector3.new(0,5,0),
+                    }):Play()
+
+                    tweensv:Create(pentagram.Base.LightAttach.Light, TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                        Range = 60,
+                        Brightness = 5
+                    }):Play()
+
+                    task.wait(3)
+
+                    tweensv:Create(part, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        Position = part.Position - Vector3.new(0,50,0),
+                    }):Play()
+
+                    tweensv:Create(gate.Entity, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        Position = gate.Entity.Position - Vector3.new(0,50,0),
+                    }):Play()
+
+                    for _,v in pairs(entity:GetDescendants()) do
+                        if v:IsA("Sound") then
+                            tweensv:Create(v, TweenInfo.new(.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                                Volume = 0,
+                            }):Play()
+                        elseif v:IsA("Light") then
+                            tweensv:Create(v, TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                                Range = 0,
+                            }):Play()
+                        end
+                    end
+
+                    task.wait(1)
+
+                    tweensv:Create(gate.Crucifix.Glow.Light, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        Brightness = 25,
+                        Range = 30,
+                    }):Play()
+
+                    tweensv:Create(pentagram.Base.LightAttach.Light, TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                        Range = 0,
+                        Brightness = 2
+                    }):Play()
+
+                    tweensv:Create(spinrate_changed, TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        Value = 0,
+                    }):Play()
+
+                    for _,v in pairs(pentagram:GetChildren()) do
+                        if v.Name == "BeamFlat" then
+                            spawn(function()
+                                if v:GetAttribute("Delay") ~= 0 then
+                                    task.wait(v:GetAttribute("Delay"))
+                                end
+
+                                tweensv:Create(v, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                                        Brightness = 0,
+                                    }):Play()
+                            end)
+                        end
+                    end
+                end
+
+                for _,v in pairs(entity:GetDescendants()) do
+                    if v:IsA("BasePart") then
+                        spawn(function()
+                            move(v)
+                        end)
+                    end	
+                end
+
+                spawn(function()
+                    task.wait(5)
+
+                    tweensv:Create(crucifix_spin, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        Value = 0,
+                    }):Play()
+
+                    task.wait(1.5)
+
+                    tweensv:Create(gate.Crucifix.Glow.Light, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        Brightness = 0,
+                        Range = 60,
+                    }):Play()
+
+                    camShake:ShakeOnce(3,10,0.7,0.5)
+
+                    gate.Crucifix.Glow.ExplodeParticle:Emit(50)
+
+                    tweensv:Create(gate.Crucifix.Glow, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        Size = gate.Crucifix.Glow.Size * 4,
+                    }):Play()
+
+                    tweensv:Create(gate.Crucifix.Glow, TweenInfo.new(1.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        Transparency = 1,
+                    }):Play()
+
+                    task.wait(5)
+
+                    gate:Destroy()
+
+                    gate_spin:Disconnect()
+                end)
+
+                task.wait(10)
+
+                entity:Destroy()
+            end
+
+            Tool_obj.Parent = Player.Backpack
+        end
+        print("正在运行 " .. item.name .. " 脚本中...")
+    end)
+end
+
+announcementBtn.MouseButton1Click:Connect(function()
+    announcementPanel.Visible = true
+    modePanel.Visible = false
+    doorScriptPanel.Visible = false
+end)
+
+modeListBtn.MouseButton1Click:Connect(function()
+    announcementPanel.Visible = false
+    modePanel.Visible = true
+    doorScriptPanel.Visible = false
+    modeContent.Position = UDim2.new(0, 0, 0, 0)
+    initScrollThumbPos()
+end)
+
+doorScriptBtn.MouseButton1Click:Connect(function()
+    announcementPanel.Visible = false
+    modePanel.Visible = false
+    doorScriptPanel.Visible = true
+end)
+
+announcementPanel.Visible = true
+modePanel.Visible = false
+doorScriptPanel.Visible = false
